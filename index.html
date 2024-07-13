@@ -3,154 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leaflet Map</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <title>Google Maps</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDi2z17Be-VQ4t8GpYitc911FI5uhUj2aQ
+    &callback=initMap" async defer></script>
     <style>
-        #map { height: 600px; }
+        img{
+            width: 50px;
+            height: 50px;
+        }
+        #map { height: 600px; width: 100%; }
     </style>
 </head>
 <body>
     <div id="map"></div>
-
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
-        var map = L.map('map').setView([42.082681, -71.935990], 11);
+        var map;
+        var markers = [];
+        var infoWindow;
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
-
-        var markersLayer = new L.LayerGroup();
-        markersLayer.addTo(map);
-
-        // map.on('click', function(e) {
-        //     var lat = e.latlng.lat.toFixed(6);
-        //     var lng = e.latlng.lng.toFixed(6);
-
-        //     var popup = L.popup()
-        //         .setLatLng(e.latlng)
-        //         .setContent("Coordinates: " + lat + ", " + lng)
-        //         .openOn(map);
-
-        //     var marker = L.marker([lat, lng]).addTo(markersLayer);
-        // });
-        var points = [
-    { lat: 42.082334126514596, lng:  -72.04750017557167, address: "916 Main St, Southbridge, MA 01550", group: 1 },
-    { lat: 42.07814834712615, lng: -72.03955966208034 , address: "543 Main St, Southbridge, MA 01550", group: 1 },
-    { lat: 42.07903926253227,  lng: -72.02712272472384, address: "200 Mechanic St, Southbridge, MA 01550", group: 1 },
-    { lat: 42.07063202947788,  lng: -72.01217120601463, address: "425 E Main St, Southbridge, MA 01550", group: 1 },
-    { lat: 42.095897253702454, lng: -72.07104790459876, address: "122 Main St, Sturbridge, MA 01566", group: 1 },
-    { lat: 42.025109709976576,  lng: -71.95136526023079, address: "759 Quinebaug Rd, North Grosvenor Dale, CT 06255", group: 2 },
-    { lat: 42.03915431221426,  lng: -71.91565261790214, address: "212 W Main St, Dudley, MA 01571", group: 2 },
-    { lat: 42.04363548548025,  lng: -71.90193521790192, address: "119 W Main St Unit A, Dudley, MA 01571", group: 2 },
-    { lat: 42.03872951705799,  lng: -71.89123721975513, address: "81 Schofield Ave, Dudley, MA 01571", group: 2 },
-    { lat: 42.04950587303352,  lng: -71.88590030060531, address: "57 Main St, Webster, MA 01570", group: 2 },
-    { lat: 42.05786322455228,  lng: -71.86825513324554, address: "94 E Main St, Webster, MA 01570", group: 2 },
-    { lat: 42.05907469074537, lng:  -71.86678241790092, address: "113 E Main St, Webster, MA 01570", group: 2 },
-    { lat: 42.05731086431571,  lng: -71.86229387742615, address: "35 Thompson Rd, Webster, MA 01570", group: 2 },
-    { lat: 42.111059572731484,  lng:-71.86500667556983, address: "240 Main St, Oxford, MA 01540", group: 3 },
-    { lat: 42.11797717065242, lng: -71.86500974673322, address: "331 Main St, Oxford, MA 01540", group: 3 },
-    { lat: 42.14589875728426, lng:  -71.98914037742053, address: "27 Worcester Rd, Charlton, MA 01507", group: 3 },
-    // 
-    { lat: 42.0725153992275, lng: -72.0251728044085, address: "58 E Main St, Southbridge, MA 01550", group: 1 },
-    { lat:42.07691231321531, lng:  -72.03332580440814, address: "67 Central St, Southbridge, MA 01550", group: 1 },
-    { lat: 42.07696805723429, lng: -72.03328288906361, address: "179 Elm St, Southbridge, MA 01550", group: 1 },
-    { lat: 42.077738228107876, lng: -72.03235211789972, address: "101 Central St, Southbridge, MA 01550", group: 1 },
-    { lat: 42.043450356425915, lng: -71.89073687557415, address: "55 Schofield Ave, Dudley, MA 01571", group: 2 },
-    { lat: 42.0428399933381, lng: -71.8907224774271, address: "59 Schofield Ave, Dudley, MA 01571", group: 2 },
-    { lat: 42.05090993865032,  lng: -71.88002128906528, address: "415 S Main St, Webster, MA 01570", group: 2 },
-    { lat: 42.05089400525464, lng: -71.88003201790141, address: "25 Lake St, Webster, MA 01570", group: 2 },
-    { lat: 42.05826109481228, lng: -71.8784194044094, address: "93 N Main St, Webster, MA 01570", group: 2 },
-    { lat: 42.05791132695633,  lng: -71.8701030890648, address: "77 E Main St, Webster, MA 01570", group: 2 },
-    { lat: 42.057831668719814, lng: -71.8701674620816, address: "31 Thompson Rd, Webster, MA 01570", group: 2 },
-    { lat: 42.05636899357996, lng: -71.87225723324565, address: "60 E Main St, Webster, MA 01570", group: 2 },
-    { lat: 42.11734551374659, lng:  -71.86528241789718, address: "311 Main St, Oxford, MA 01540", group: 3 },
-    { lat: 42.11726593010574, lng: -71.86534679091397, address: "676 Main St, North Oxford, MA 01537", group: 3 },
-    { lat: 42.019279148584374, lng: -71.94010486023116, address: "615 Quinebaug Rd, North Grosvenor Dale, CT 06255", group: 2 },
-    { lat: 42.08046871072102, lng: -72.04459892384895, address: "795 Main St, Southbridge, MA 01550", group: 1 },
-    { lat: 42.073139117925095, lng: -72.02723155520502, address: "39 Main St, Southbridge, MA 01550", group: 1 },
-    { lat: 42.08133975450645, lng: -72.02810294450288, address: "116 Worcester St, Southbridge, MA 01550", group: 1 },
-    { lat: 42.069986820114195, lng: -72.01141376828404, address: "465 E Main St, Southbridge, MA 01550", group: 1 },
-    { lat: 42.073520716551265, lng: -72.02764204025598, address: "42 Main St, Southbridge, MA 01550", group: 1 },
-    { lat: 42.06923405205917, lng: -72.01022415723311, address: "491 E Main St, Southbridge, MA 01550", group: 1 },
-    { lat: 42.03622010298488, lng: -71.91989412654813, address: "251 W Main St, Dudley, MA 01571", group: 2 },
-    { lat: 42.048924517431104, lng: -71.88564778188675, address: "80 Main St, Webster, MA 01570", group: 2 },
-    { lat: 42.056875118582695, lng: -71.87169944679209, address: "67 E Main St, Webster, MA 01570", group: 2 },
-    { lat: 42.057056744856816, lng: -71.87033118334173, address: "74 E Main St, Webster, MA 01570", group: 2 },
-    { lat: 42.06021926461818, lng: -71.8643077981879, address: "137 E Main St, Webster, MA 01570", group: 2 },
-    { lat: 42.04541690231102, lng: -71.86327818049911, address: "144 Thompson Rd, Webster, MA 01570", group: 2 },
-    { lat: 42.05370596618878, lng: -71.84014711316401, address: "188 Gore Rd, Webster, MA 01570", group: 2 },
-    { lat: 42.11703205971753, lng: -71.86066003629993, address: "24 Sutton Ave, Oxford, MA 01540", group: 3 }
-];
-
-var polygonPoints = [
-    [ // Группа 1
-       [ 42.098222, -72.076227],
-       [42.087777, -72.072192],
-       [42.077266, -72.054764],
-       [42.067072, -72.029351],
-       [42.065798, -72.009433],
-       [ 42.073635, -72.000332],
-       [42.086121, -72.018018],
-       [42.095229, -72.030643],
-       [42.100006, -72.057859],
-       [42.101279, -72.073398]
-    ],
-    [ // Группа 2
-        [42.023067, -71.955103],
-        [ 42.013502, -71.928488],
-        [42.030246, -71.879332],
-        [42.037603, -71.845215],
-        [ 42.051479, -71.828075],
-        [42.068449, -71.855525],
-        [42.069455, -71.877676],
-        [42.054927, -71.906695],
-        [42.034020, -71.951682 ]
-    ],
-    [ // Группа 3
-        [ 42.110656, -71.864930],
-        [42.114269, -71.858090],
-        [42.119745, -71.856373],
-        [42.121050, -71.864056],
-        [42.117930, -71.869250],
-        [42.111627, -71.866846]
-    ]
-];
-
-        var colors = ['red', 'blue', 'green'];
-
-        var markers = points.map(point => {
-            var marker = L.marker([point.lat, point.lng]);
-            marker.bindPopup(point.address);
-            return { marker: marker, group: point.group };
-        });
-
-        function addZone(map, polygonPoints, color, group, id) {
-            var zone = L.polygon(polygonPoints, {
-                color: color,
-                fillColor: color,
-                fillOpacity: 0.4
-            }).addTo(map);
-            
-            zone._id = id; // Assign an ID to the zone
-
-            zone.on('click', function() {
-                markersLayer.clearLayers();
-
-                markers.filter(marker => marker.group === group).forEach(marker => {
-                    markersLayer.addLayer(marker.marker);
-                });
-
-                zone.setStyle({ fillOpacity: 0.1 });
-                map.fitBounds(zone.getBounds());
-                
-                console.log("Zone ID: " + zone._id); // Log the zone ID to the console
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 42.0753, lng: -72.0335 },
+                zoom: 10
             });
-        }
 
-        polygonPoints.forEach((points, index) => {
-            addZone(map, points, colors[index], index + 1, 'zone-' + (index + 1)); // Assigning unique ID
-        });
+            infoWindow = new google.maps.InfoWindow();
+
+            google.maps.event.addListener(map, 'click', function(event) {
+                placeMarker(event.latLng);
+                showCoordinates(event.latLng);
+            });
+
+            var points = [
+                { lat: 42.082334126514596, lng: -72.04750017557167, address: "916 Main St, Southbridge, MA 01550", group: 1 },
+                { lat: 42.07814834712615, lng: -72.03955966208034, address: "543 Main St, Southbridge, MA 01550", group: 1 },
+                { lat: 42.07903926253227, lng: -72.02712272472384, address: "200 Mechanic St, Southbridge, MA 01550", group: 1 },
+                { lat: 42.07063202947788, lng: -72.01217120601463, address: "425 E Main St, Southbridge, MA 01550", group: 1 },
+                { lat: 42.095897253702454, lng: -72.07104790459876, address: "122 Main St, Sturbridge, MA 01566", group: 1 },
+                { lat: 42.025109709976576, lng: -71.95136526023079, address: "759 Quinebaug Rd, North Grosvenor Dale, CT 06255", group: 1 },
+                { lat: 42.03915431221426, lng: -71.91565261790214, address: "212 W Main St, Dudley, MA 01571", group: 1 },
+                { lat: 42.04363548548025, lng: -71.90193521790192, address: "119 W Main St Unit A, Dudley, MA 01571", group: 1 },
+                { lat: 42.03872951705799, lng: -71.89123721975513, address: "81 Schofield Ave, Dudley, MA 01571", group: 1 },
+                { lat: 42.04950587303352, lng: -71.88590030060531, address: "57 Main St, Webster, MA 01570", group: 1 },
+                { lat: 42.05786322455228, lng: -71.86825513324554, address: "94 E Main St, Webster, MA 01570", group: 1 },
+                { lat: 42.05907469074537, lng: -71.86678241790092, address: "113 E Main St, Webster, MA 01570", group: 1 },
+                { lat: 42.05731086431571, lng: -71.86229387742615, address: "35 Thompson Rd, Webster, MA 01570", group: 1 },
+                { lat: 42.111059572731484, lng: -71.86500667556983, address: "240 Main St, Oxford, MA 01540", group: 1 },
+                { lat: 42.11797717065242, lng: -71.86500974673322, address: "331 Main St, Oxford, MA 01540", group: 1 },
+                { lat: 42.14589875728426, lng: -71.98914037742053, address: "27 Worcester Rd, Charlton, MA 01507", group: 1 },
+                // 
+                { lat: 42.0725153992275, lng: -72.0251728044085, address: "58 E Main St, Southbridge, MA 01550", group: 1 },
+                { lat: 42.07691231321531, lng: -72.03332580440814, address: "67 Central St, Southbridge, MA 01550", group: 1 },
+                { lat: 42.07696805723429, lng: -72.03328288906361, address: "179 Elm St, Southbridge, MA 01550", group: 1 },
+                { lat: 42.077738228107876, lng: -72.03235211789972, address: "101 Central St, Southbridge, MA 01550", group: 1 },
+                { lat: 42.043450356425915, lng: -71.89073687557415, address: "55 Schofield Ave, Dudley, MA 01571", group: 1 },
+                { lat: 42.0428399933381, lng: -71.8907224774271, address: "59 Schofield Ave, Dudley, MA 01571", group: 1 },
+                { lat: 42.05090993865032, lng: -71.88002128906528, address: "415 S Main St, Webster, MA 01570", group: 1 },
+                { lat: 42.05089400525464, lng: -71.88003201790141, address: "25 Lake St, Webster, MA 01570", group: 1 },
+                { lat: 42.05826109481228, lng: -71.8784194044094, address: "93 N Main St, Webster, MA 01570", group: 1 },
+                { lat: 42.05791132695633, lng: -71.8701030890648, address: "77 E Main St, Webster, MA 01570", group: 1 },
+                { lat: 42.057831668719814, lng: -71.8701674620816, address: "31 Thompson Rd, Webster, MA 01570", group: 1 },
+                { lat: 42.05636899357996, lng: -71.87225723324565, address: "60 E Main St, Webster, MA 01570", group: 1 },
+                { lat: 42.11734551374659, lng: -71.86528241789718, address: "311 Main St, Oxford, MA 01540", group: 1 },
+                { lat: 42.11726593010574, lng: -71.86534679091397, address: "676 Main St, North Oxford, MA 01537", group: 1 },
+                { lat: 42.019279148584374, lng: -71.94010486023116, address: "615 Quinebaug Rd, North Grosvenor Dale, CT 06255", group: 1 },
+                { lat: 42.08046871072102, lng: -72.04459892384895, address: "795 Main St, Southbridge, MA 01550", group: 1 },
+                { lat: 42.073139117925095, lng: -72.02723155520502, address: "39 Main St, Southbridge, MA 01550", group: 1 },
+                { lat: 42.08133975450645, lng: -72.02810294450288, address: "116 Worcester St, Southbridge, MA 01550", group: 1 },
+                { lat: 42.069986820114195, lng: -72.01141376828404, address: "465 E Main St, Southbridge, MA 01550", group: 1 },
+                { lat: 42.073520716551265, lng: -72.02764204025598, address: "42 Main St, Southbridge, MA 01550", group: 1 },
+                { lat: 42.06923405205917, lng: -72.01022415723311, address: "491 E Main St, Southbridge, MA 01550", group: 1 },
+                { lat: 42.03622010298488, lng: -71.91989412654813, address: "251 W Main St, Dudley, MA 01571", group: 1 },
+                { lat: 42.048924517431104, lng: -71.88564778188675, address: "80 Main St, Webster, MA 01570", group: 1 },
+                { lat: 42.056875118582695, lng: -71.87169944679209, address: "67 E Main St, Webster, MA 01570", group: 1 },
+                { lat: 42.057056744856816, lng: -71.87033118334173, address: "74 E Main St, Webster, MA 01570", group: 1 },
+                { lat: 42.06021926461818, lng: -71.8643077981879, address: "137 E Main St, Webster, MA 01570", group: 1 },
+                { lat: 42.04541690231102, lng: -71.86327818049911, address: "144 Thompson Rd, Webster, MA 01570", group: 1 },
+                { lat: 42.05370596618878, lng: -71.84014711316401, address: "188 Gore Rd, Webster, MA 01570", group: 1 },
+                { lat: 42.11703205971753, lng: -71.86066003629993, address: "24 Sutton Ave, Oxford, MA 01540", group: 1 }
+            ];
+
+            var polygonPoints = [
+                [ // Группа 1
+                    { lat: 42.016386, lng: -72.137762 },
+                    { lat: 42.015620,  lng: -71.833520 },
+                    { lat: 42.179951, lng: -71.812171 },
+                    { lat: 42.161885, lng: -72.017478 }
+                ]
+            ];
+            var colors = ['#FF0000', '#0000FF', '#00FF00'];
+            var markerIcon = {
+                url: '1.png', // URL вашего изображения
+                scaledSize: new google.maps.Size(30, 40) // Размер изображения
+            };
+
+points.forEach(point => {
+    var marker = new google.maps.Marker({
+        position: { lat: point.lat, lng: point.lng },
+        title: point.address,
+        icon: markerIcon, // Используемое изображение для маркера
+        group: point.group
+    });
+
+    marker.addListener('click', function() {
+        infoWindow.setContent(point.address);
+        infoWindow.open(map, marker);
+    });
+
+    markers.push(marker);
+});
+
+polygonPoints.forEach((polygon, index) => {
+    var zone = new google.maps.Polygon({
+        paths: polygon,
+        strokeColor: colors[index],
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: colors[index],
+        fillOpacity: 0.35,
+        map: map,
+        group: index + 1,
+        id: 'zone-' + (index + 1) // Присваиваем уникальный ID
+    });
+
+    google.maps.event.addListener(zone, 'click', function(event) {
+        showGroupMarkers(zone.group);
+        map.fitBounds(getBounds(zone));
+        console.log("Zone ID: " + zone.id); // Логируем ID зоны в консоль
+    });
+});
+}
+
+// function placeMarker(location) {
+// var marker = new google.maps.Marker({
+//     position: location,
+//     map: map
+// });
+// }
+
+function showCoordinates(location) {
+var lat = location.lat().toFixed(6);
+var lng = location.lng().toFixed(6);
+var content = 'Coordinates: ' + lat + ', ' + lng;
+
+infoWindow.setContent(content);
+infoWindow.setPosition(location);
+infoWindow.open(map);
+}
+
+function showGroupMarkers(group) {
+markers.forEach(marker => {
+    if (marker.group === group) {
+        marker.setMap(map);
+    } else {
+        marker.setMap(null);
+    }
+});
+}
+
+function getBounds(polygon) {
+var bounds = new google.maps.LatLngBounds();
+polygon.getPath().forEach(function(latLng) {
+    bounds.extend(latLng);
+});
+return bounds;
+}
     </script>
 </body>
 </html>
